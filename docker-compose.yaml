@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      image: ./dockerfiles/back.Dockerfile
+    ports:
+      - "3000:3000"  # Expose frontend on port 3000
+    environment:
+      - NODE_ENV=production
+      - API_URL=http://localhost:5000/api  # Backend URL
+
+  backend:
+    build:
+      context: ./backend
+      image: ./dockerfiles/back.Dockerfile
+    ports:
+      - "5000:5000"  # Expose backend on port 5000
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://user:password@external-db-ip:5432/dbname  # Update with actual DB details
+      - SECRET_KEY=your_secret_key_here  # Other necessary secrets
+
+  # Optional: Redis service for caching
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"  # Expose Redis on port 6379
